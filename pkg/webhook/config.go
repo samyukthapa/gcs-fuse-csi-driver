@@ -29,10 +29,11 @@ import (
 )
 
 type Config struct {
-	ShouldInjectSAVolume  bool   `json:"-"`
-	EnableGcsfuseProfiles bool   `json:"-"`
-	PodHostNetworkSetting bool   `json:"-"`
-	EnableNumaPinning     bool   `json:"enable-numa-pinning,omitempty"`
+	ShouldInjectSAVolume          bool   `json:"-"`
+	EnableGcsfuseProfiles         bool   `json:"-"`
+	PodHostNetworkSetting         bool   `json:"-"`
+	RequireApplicationCredentials bool   `json:"-"`
+	EnableNumaPinning             bool   `json:"enable-numa-pinning,omitempty"`
 	ContainerImage        string `json:"-"`
 	ImagePullPolicy       string `json:"-"`
 	//nolint:tagliatelle
@@ -142,10 +143,11 @@ func (si *SidecarInjector) prepareConfig(prefix string, pod corev1.Pod) (*Config
 
 func getConfigFromAnnotation(defaultConfig Config, prefix string, annotations map[string]string) (*Config, error) {
 	config := &Config{
-		ShouldInjectSAVolume:  defaultConfig.ShouldInjectSAVolume,
-		ContainerImage:        defaultConfig.ContainerImage,
-		ImagePullPolicy:       defaultConfig.ImagePullPolicy,
-		EnableGcsfuseProfiles: defaultConfig.EnableGcsfuseProfiles,
+		ShouldInjectSAVolume:          defaultConfig.ShouldInjectSAVolume,
+		ContainerImage:                defaultConfig.ContainerImage,
+		ImagePullPolicy:               defaultConfig.ImagePullPolicy,
+		EnableGcsfuseProfiles:         defaultConfig.EnableGcsfuseProfiles,
+		RequireApplicationCredentials: defaultConfig.RequireApplicationCredentials,
 	}
 	extractedData := make(map[string]any)
 	for key, value := range annotations {
